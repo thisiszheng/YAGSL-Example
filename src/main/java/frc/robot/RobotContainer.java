@@ -132,8 +132,8 @@ public class RobotContainer {
     if (RobotBase.isSimulation()) {
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
     } else {
-      // drivebaslte.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-      drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     }
 
     if (Robot.isSimulation()) {
