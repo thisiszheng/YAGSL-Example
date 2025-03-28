@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.CoralChuteCommand;
+import frc.robot.subsystems.CoralChute;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -38,6 +40,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve"));
+  private final CoralChute coralbase = new CoralChute(7);
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
@@ -173,6 +176,8 @@ public class RobotContainer {
     } else {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      driverXbox.b().whileTrue(new CoralChuteCommand(coralbase, 0.60));
+      driverXbox.y().whileTrue(new CoralChuteCommand(coralbase, -0.60));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
@@ -183,7 +188,7 @@ public class RobotContainer {
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
+   *VH-109
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
