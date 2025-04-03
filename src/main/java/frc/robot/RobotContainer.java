@@ -19,7 +19,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlgaeIntakeArm;
+import frc.robot.commands.AlgaeIntakeRoller;
 import frc.robot.commands.CoralChuteCommand;
+import frc.robot.subsystems.AlgaeChute;
 import frc.robot.subsystems.CoralChute;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -41,7 +44,7 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve"));
   private final CoralChute coralbase = new CoralChute(7);
-
+  private final AlgaeChute algaebase = new AlgaeChute(5,6,8);
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
@@ -174,10 +177,14 @@ public class RobotContainer {
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
     } else {
+      driverXbox.leftTrigger().whileTrue((new AlgaeIntakeRoller(algaebase, -0.30)));
+      driverXbox.rightTrigger().whileTrue((new AlgaeIntakeRoller(algaebase, 0.30)));
+      driverXbox.leftBumper().whileTrue((new AlgaeIntakeArm(algaebase, -0.30)));
+      driverXbox.rightBumper().whileTrue((new AlgaeIntakeArm(algaebase, 0.30 )));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(new CoralChuteCommand(coralbase, 0.60));
-      driverXbox.y().whileTrue(new CoralChuteCommand(coralbase, -0.60));
+      driverXbox.b().whileTrue(new CoralChuteCommand(coralbase, 0.30));
+      driverXbox.y().whileTrue(new CoralChuteCommand(coralbase, -0.30));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
