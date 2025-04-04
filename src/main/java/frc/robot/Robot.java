@@ -5,11 +5,15 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.CoralChuteCommand;
+import frc.robot.subsystems.CoralChute;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -25,6 +29,8 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+
+  public double m_startTime;
 
   public Robot()
   {
@@ -102,14 +108,15 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    m_startTime = Timer.getFPGATimestamp();
     m_robotContainer.setMotorBrake(true);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null)
-    {
-      m_autonomousCommand.schedule();
-    }
+    // // schedule the autonomous command (example)
+    // if (m_autonomousCommand != null)
+    // {
+    //   m_autonomousCommand.schedule();
+    // }
   }
 
   /**
@@ -118,6 +125,14 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousPeriodic()
   {
+    double m_currentTime = Timer.getFPGATimestamp();
+
+    if (m_currentTime - m_startTime < 4.0) {
+      RobotContainer.drivebase.drive(new Translation2d(1.0, 0.0), 0.0, true);
+    } else {
+      RobotContainer.drivebase.drive(new Translation2d(0.0, 0.0), 0.0, true);
+      new CoralChuteCommand(RobotContainer.coralbase, 0.30);
+    }
   }
 
   @Override

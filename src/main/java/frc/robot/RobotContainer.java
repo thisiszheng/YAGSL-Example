@@ -41,10 +41,10 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+  public static final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve"));
-  private final CoralChute coralbase = new CoralChute(7);
-  private final AlgaeChute algaebase = new AlgaeChute(5,6,8);
+  public static final CoralChute coralbase = new CoralChute(7);
+  public static final AlgaeChute algaebase = new AlgaeChute(5,6,8);
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
@@ -183,8 +183,8 @@ public class RobotContainer {
       driverXbox.rightBumper().whileTrue((new AlgaeIntakeArm(algaebase, 0.30 )));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(new CoralChuteCommand(coralbase, 0.30));
-      driverXbox.y().whileTrue(new CoralChuteCommand(coralbase, -0.30));
+      driverXbox.b().whileTrue(new CoralChuteCommand(coralbase, 0.50)); //4:34 pm 4/4
+      driverXbox.y().whileTrue(new CoralChuteCommand(coralbase, -0.50)); //4:34 pm 4/4
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
