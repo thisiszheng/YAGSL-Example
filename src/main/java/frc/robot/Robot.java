@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,6 +34,9 @@ public class Robot extends TimedRobot
   private Timer disabledTimer;
 
   public double m_startTime;
+
+  Command driveFieldOrientedAnglularVelocity = RobotContainer.drivebase.driveFieldOriented(RobotContainer.driveAngularVelocity);
+
 
   public Robot()
   {
@@ -125,19 +131,23 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousPeriodic()
   {
-    double m_currentTime = Timer.getFPGATimestamp();
+     double m_currentTime = Timer.getFPGATimestamp();
 
-    if (m_currentTime - m_startTime < 4.0) {
-      RobotContainer.drivebase.drive(new Translation2d(1.0, 0.0), 0.0, true);
-    } else {
+    if (m_currentTime - m_startTime < 5.0) {
+      RobotContainer.drivebase.drive(new Translation2d(-1.5, 0.0), 0.0, true);
+    } else if (m_currentTime - m_startTime >= 5.0 && m_currentTime - m_startTime < 7.0) {
       RobotContainer.drivebase.drive(new Translation2d(0.0, 0.0), 0.0, true);
-      new CoralChuteCommand(RobotContainer.coralbase, 0.30);
+      RobotContainer.coralbase.setMotor(1);
+      // new CoralChuteCommand(RobotContainer.coralbase, 0.30);
+    } else {
+      RobotContainer.coralbase.setMotor(0);
     }
   }
 
   @Override
   public void teleopInit()
   {
+    RobotContainer.drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
